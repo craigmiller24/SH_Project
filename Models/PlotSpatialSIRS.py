@@ -128,11 +128,11 @@ def DataPlot():
     for label in (ax.get_xticklabels() + ax.get_yticklabels()): 
         label.set_fontsize(16)
 
-    #plt.plot(ts,Ss,label="Susceptible")
+    plt.plot(ts,Ss,label="Susceptible")
     plt.plot(ts,Is,label="Infected",color='#9fda9a')
-    #plt.plot(ts,Rs,label="Resistant")
+    plt.plot(ts,Rs,label="Resistant")
 
-    #plt.legend()
+    plt.legend()
     plt.tight_layout()
     plt.show()
 
