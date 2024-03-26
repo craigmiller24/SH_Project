@@ -177,6 +177,48 @@ def RunSimI(N,sweeps,skip,p1,p2,p3,opt):
     return I_mean,I_var,err_var
 
 ########################################################################
+
+# Runs the Simulation including a fraction of permanently immune individuals
+def RunSimH(N,sweeps,p1,p2,p3,h,skip):
+
+    # Initialise state of system with 1/3 probability of being any SIR compartment
+    state = rng.choice([0,1,2],(N,N))
+
+    # Initialises sum variables that will be added to on each measurement to be anylysed at the end to produce the final result
+    I_sum = 0
+
+    # Total number of nodes in the system
+    totalN = N * N
+
+    # Randomly assigns nodes to have permanent immunity (state[i][j] == 3 has no changes in the Rules() function thus will always stay the same)
+    for _ in range(int(min(h,1) * totalN)):
+        i,j = rng.choice(N,2)
+        state[i][j] = 3
+
+    # Main simulation loop runs for the specified iteration length
+    for t in range(1,totalN*sweeps):
+
+        # Performs a Sweep on the system using the SIRS model rules and returns the updated state
+        state = Rules(state,N,p1,p2,p3)
+        
+        print(t)
+
+        if t >= totalN*skip:
+            # Adds the newest state to the generations array
+            print("Sweep: {0}, I: {1}".format(t,len(state[state == 1])))
+            I_sum += np.sum(state[state == 1])
+        
+        # Breaks out of simulation loop once the infection has run its course (I = 0)
+        if len(state[state == 1]) == 0:
+            sweeps = t
+            break
+
+    # Uses the sum of Infected sites to calculate the average fraction. The skipped measurements to wait for equilibrium have been accounted for.
+    I_mean = (I_sum/(sweeps - skip - 1)) / totalN
+
+    return I_mean
+
+########################################################################
 ###############################ANIMATION################################
 ########################################################################
 
@@ -213,10 +255,10 @@ def mainA():
     ani = FuncAnimation(fig, animate, frames=sweeps, interval=200,fargs=(generations,1))
 
     # Saves the animation as a .gif file
-    ani.save('Wavy.gif', writer = 'mencoder', fps=10)
+    ani.save('Documents/Images/Wave.gif', writer = 'mencoder', fps=10)
 
     # Saves S,I,R data for each sweep to file
-    f1 = open("Wave_Data.txt", 'a')
+    f1 = open("Models/Data_Files/Wave_Data.txt", 'a')
     for i in range(len(data)):
         f1.write("{0:5f}, {1:5f}, {2:5f}\n".format(data[i][0],data[i][1],data[i][2]))
     f1.close()
@@ -244,7 +286,7 @@ def mainI():
             # Run simulation
             I_mean,I_var,err_var = RunSimI(N,sweeps,skip,p1,p2,p3,'I')
 
-            f1 = open("Infected_Data.txt", 'a')
+            f1 = open("Models/Data_Files/Infected_Data.txt", 'a')
             f1.write("{0:4.2f}, {1:4.2f}, {2}\n".format(p1,p3,abs(I_mean)))
             f1.close()
 
@@ -268,7 +310,7 @@ def mainV():
         # Run simulation
         I_mean,I_var,err_var = RunSimI(N,sweeps,skip,p1,p2,p3,'V')
 
-        f1 = open("Variance_Data.txt", 'a')
+        f1 = open("Models/Data_Files/Variance_Data.txt", 'a')
         f1.write("{0:4.3f}, {1}, {2}\n".format(p1,I_var,err_var))
         f1.close()
 
@@ -279,6 +321,7 @@ def mainH():
     # Initialise 50x50 system, Run the simulation for 1000 sweeps wait 100 until equilibrium is reached then take a measurement of each subsequent sweep
     N = 50
     sweeps = 1_000
+    skip = 100
     
     # incr determines the incremental factor between subsequent fractions of permanent immunity with fixed values of p1 = p3 = 1 and p2 = 0.5
     incr = 0.005
@@ -289,10 +332,10 @@ def mainH():
 
     for h in herds:
         # Run simulation
-        generations,I_mean = RunSimA(N,sweeps,p1,p2,p3,h)
+        I_mean = RunSimH(N,sweeps,p1,p2,p3,h,skip)
 
         # Appends the Average Infected Fraction data and associated permanent immunity (h) value to the data file
-        f1 = open("Herd_Immunity_Data.txt", 'a')
+        f1 = open("Models/Data_Files/Herd_Immunity_Data.txt", 'a')
         f1.write("{0:4.3f}, {1}\n".format(h,abs(I_mean)))
         f1.close()
 

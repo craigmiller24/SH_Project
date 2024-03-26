@@ -3,7 +3,7 @@ import numpy as np
 
 # Plots the Contour plot of the infection data for different combinations of p1 & p3
 def ContourPlot():
-    filename = 'Infected_Data.txt'
+    filename = 'Models/Data_Files/Infected_Data.txt'
     f = open(filename, 'r')
     lines = f.readlines() 
     
@@ -33,11 +33,12 @@ def ContourPlot():
     ax.tricontour(p1s,p3s,Is)
     fig.colorbar(tcf, ax=ax)
 
+    plt.savefig('Documents/Images/ContourPlot.png')
     plt.show()
 
 # Plots the Variance in the Average Infected fraction against p1
 def VariancePlot():
-    filename = 'Variance_Data.txt'
+    filename = 'Models/Data_Files/Variance_Data.txt'
     f = open(filename, 'r')
     lines = f.readlines() 
     
@@ -61,13 +62,14 @@ def VariancePlot():
     ax.set_ylabel('Variance')
     ax.set_title("Scaled Variance vs P1 (P2 = P3 = 0.5)")
     ax.errorbar(p1s,Vs, Errs, fmt='kx')
+    
     plt.plot(p1s,Vs, linestyle='dashed')
-
+    plt.savefig('Documents/Images/VariancePlot.png')
     plt.show()
 
 # Plots the fraction of permanent immunity vs average infected fraction
 def HerdPlot():
-    filename = 'Herd_Immunity_Data.txt'
+    filename = 'Models/Data_Files/Herd_Immunity_Data.txt'
     f = open(filename, 'r')
     lines = f.readlines() 
     
@@ -92,10 +94,11 @@ def HerdPlot():
     ax.set_title("Average Infected Fraction vs Immunity Fraction (P1 = P3 = 1, P2 = 0.5)")
 
     plt.plot(hs,Is)
+    plt.savefig('Documents/Images/HerdPlot.png')
     plt.show()
 
 def DataPlot():
-    filename = 'Wave_Data.txt'
+    filename = 'Models/Data_Files/Wave_Data.txt'
     f = open(filename, 'r')
     lines = f.readlines() 
     
@@ -134,7 +137,7 @@ def DataPlot():
 
     #plt.legend()
     plt.tight_layout()
-    plt.savefig('InfectionPlot.png')
+    plt.savefig('Documents/Images/InfectionPlot.png')
     plt.show()
 
 # Allows command line inputs to determine choice of plot
