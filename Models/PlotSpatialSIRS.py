@@ -4,22 +4,24 @@ import numpy as np
 # Plots the Contour plot of the infection data for different combinations of p1 & p3
 def ContourPlot():
     filename = 'Models/Data_Files/Infected_Data.txt'
-    f = open(filename, 'r')
-    lines = f.readlines() 
-    
-    p1s = np.zeros(len(lines))
-    p3s = np.zeros(len(lines))
-    Is = np.zeros(len(lines))
 
-    i = 0
-    for line in lines:
-        line = line.strip('\n').split(',')
-        p1s[i] = float(line[0])
-        p3s[i] = float(line[1])
-        Is[i] = float(line[2])
-        i += 1
+    # Read the data from the .txt file
+    data = np.genfromtxt(filename, delimiter=',')
 
-    f.close()
+    # Separate the columns
+    x = data[:, 0]
+    y = data[:, 1]
+    z = data[:, 2]
+
+    # Create an array of indices to sort the data based on x and y values
+    sorted_indices = np.lexsort((x, y))
+
+    # Sort the z values based on the sorted indices
+    sorted_z = z[sorted_indices]
+
+
+    # Reshape the sorted z values into a grid
+    z_grid = sorted_z.reshape(21, 21)
 
     fig,ax = plt.subplots(figsize=(8,8))    
 
@@ -29,12 +31,15 @@ def ContourPlot():
     ax.set_ylabel('P(R->S)')
     ax.set_title("Fractional Average Infected Sites, <I>/N")
     ax.set_aspect('equal')
-    tcf = ax.tricontour(p1s,p3s,Is)
-    ax.tricontour(p1s,p3s,Is)
-    fig.colorbar(tcf, ax=ax)
+    ax.tricontour(x,y,z)
 
+    # Plot the heatmap
+    ht = ax.imshow(z_grid, cmap='viridis', origin='lowerleft', extent=[np.min(x), np.max(x), np.min(y), np.max(y)])
+    fig.colorbar(ht,ax=ax,label="Value")  # Add a colorbar
     plt.savefig('Documents/Images/ContourPlot.png')
     plt.show()
+
+    #plt.show()
 
 # Plots the Variance in the Average Infected fraction against p1
 def VariancePlot():
