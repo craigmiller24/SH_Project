@@ -88,10 +88,10 @@ def HerdPlot():
     fig,ax = plt.subplots(figsize=(8,8))    
 
     ax.set_xlim(0,1)
-    ax.set_ylim(0,1)
+    ax.set_ylim(0,0.5)
     ax.set_xlabel('Immunity Fraction (f_Im)')
     ax.set_ylabel('Average Infected Fraction (<I>/N)')
-    ax.set_title("Average Infected Fraction vs Immunity Fraction (P1 = P3 = 1, P2 = 0.5)")
+    ax.set_title("Average Infected Fraction vs Immunity Fraction (P1 = P2 = P3 = 0.5)")
 
     plt.plot(hs,Is)
     plt.savefig('Documents/Images/HerdPlot.png')
