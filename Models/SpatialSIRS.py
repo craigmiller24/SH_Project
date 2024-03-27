@@ -298,8 +298,8 @@ def mainV():
     skip = 100
     
     # Resolution determines the incremental factor between subsequent parameters, increment over p1 with p2 = p3 = 0.5
-    resolution = 0.05
-    p1s = np.arange(0.5,1+resolution,resolution)
+    resolution = 0.1
+    p1s = np.arange(0,1+resolution,resolution)
     p2 = 0.5
     p3 = 0.5
 
