@@ -77,13 +77,13 @@ def runModel(i_0,iters,max_prob_R,max_prob_S,maxT):
     crit_lim = 0.1
 
     # Main loop to update values for each timestep
-    for t in range(iters-1):
+    for t in range(iters - 1):
         # Calculates the newly infected and recovered proportions at time t
         newI[t] = beta * S[t] * I[t]
         newR[t] = updateR(t,newI,max_prob_R,maxT)
         newS[t] = updateS(t,newR,max_prob_S)
 
-        print("dS = " + str(newS[t]-newI[t]) + ", dI = " + str(newI[t]-newR[t]) + ", dR = " + str(newR[t]-newS[t]))
+        print("Day: " + str(t + 1) + ", dS = " + str(newS[t]-newI[t]) + ", dI = " + str(newI[t]-newR[t]) + ", dR = " + str(newR[t]-newS[t]))
         
         # Uses the new values to update the main compartment arrays at the next timestep
         S[t+1] = S[t] + newS[t] - newI[t] 
@@ -109,7 +109,7 @@ def plot_sir_model(S, I, R, iters):
     plt.plot(range(iters), R, label='Resistant')
     plt.xlabel('Time (Days)')
     plt.ylabel('% of Population')
-    plt.title('SIR Model Simulation')
+    plt.title('SIRS Model Simulation')
     plt.legend()
     plt.show()
 
@@ -121,7 +121,7 @@ def plot_sir_model(S, I, R, iters):
 if __name__ == "__main__":
     # Input initialisation parameters: i_0 - initial % of population infected
     i_0 = float(input("Initial Percentage of population infected [0,100]: ")) / 100
-    iters = int(input("Number of Timesteps: "))
+    iters = int(input("Number of Timesteps: ")) + 1
     max_prob_R = int(input("How many days after initial infection do most people recover? ")) + 1
     maxT = int(input("Maximum time someone can be infected for? "))
     max_prob_S = int(input("How many days after recovery do most people lose their immunity? ")) + 1
