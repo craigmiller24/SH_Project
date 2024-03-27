@@ -270,13 +270,13 @@ def mainI():
     # Initialise 50x50 system, Run the simulation for 1000 sweeps wait 100 until equilibrium is reached then take a measurement of each subsequent sweep
     N = 50
     sweeps = 1_000
-    skip = 50
+    skip = 100
     
     # Resolution determines the incremental factor between subsequent parameters, increment over p1 & p3 with p2 fixed at 0.5
     resolution = 0.05
-    p1s = np.arange(0.2,1+resolution,resolution)
+    p1s = np.arange(0,1+resolution,resolution)
     p2 = 0.5
-    p3s = np.arange(0.25,1+resolution,resolution)
+    p3s = np.arange(0,1+resolution,resolution)
 
     # Iterates over each combination of probability p1 & p2 and appends the Average infected sites fraction and associated p values to the data file
     for p1 in p1s:
