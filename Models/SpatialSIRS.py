@@ -58,11 +58,11 @@ def Rules(state,N,p1,p2,p3):
                 if r < p1:
                     state[i][j] = 1
         # An infected state (state[i][j] = 1) can recover when assessed with p2
-        if state[i][j] == 1:
+        elif state[i][j] == 1:
             if r < p2:
                 state[i][j] = 2
         # A Recovered state (state[i][j] = 2) can lose immunity and return to susceptible when assessed with p3
-        if state[i][j] == 2:
+        elif state[i][j] == 2:
             if r < p3:
                 state[i][j] = 0
 
@@ -196,16 +196,14 @@ def RunSimH(N,sweeps,p1,p2,p3,h,skip):
         state[i][j] = 3
 
     # Main simulation loop runs for the specified iteration length
-    for t in range(1,totalN*sweeps):
+    for t in range(1,sweeps):
 
         # Performs a Sweep on the system using the SIRS model rules and returns the updated state
         state = Rules(state,N,p1,p2,p3)
         
-        print(t)
-
-        if t >= totalN*skip:
+        if t > skip - 1:
             # Adds the newest state to the generations array
-            print("Sweep: {0}, I: {1}".format(t,len(state[state == 1])))
+            print("Sweep: {0}, Immunity Fraction: {1}, I: {2}".format(t,h,len(state[state == 1])))
             I_sum += np.sum(state[state == 1])
         
         # Breaks out of simulation loop once the infection has run its course (I = 0)
@@ -272,13 +270,13 @@ def mainI():
     # Initialise 50x50 system, Run the simulation for 1000 sweeps wait 100 until equilibrium is reached then take a measurement of each subsequent sweep
     N = 50
     sweeps = 1_000
-    skip = 50
+    skip = 100
     
     # Resolution determines the incremental factor between subsequent parameters, increment over p1 & p3 with p2 fixed at 0.5
     resolution = 0.05
-    p1s = np.arange(0.3,1+resolution,resolution)
+    p1s = np.arange(0,1+resolution,resolution)
     p2 = 0.5
-    p3s = np.arange(0.3,1+resolution,resolution)
+    p3s = np.arange(0,1+resolution,resolution)
 
     # Iterates over each combination of probability p1 & p2 and appends the Average infected sites fraction and associated p values to the data file
     for p1 in p1s:
@@ -300,8 +298,8 @@ def mainV():
     skip = 100
     
     # Resolution determines the incremental factor between subsequent parameters, increment over p1 with p2 = p3 = 0.5
-    resolution = 0.05
-    p1s = np.arange(0.5,1+resolution,resolution)
+    resolution = 0.1
+    p1s = np.arange(0,1+resolution,resolution)
     p2 = 0.5
     p3 = 0.5
 
@@ -323,17 +321,16 @@ def mainH():
     sweeps = 1_000
     skip = 100
     
-    # incr determines the incremental factor between subsequent fractions of permanent immunity with fixed values of p1 = p3 = 1 and p2 = 0.5
-    incr = 0.005
+    # incr determines the incremental factor between subsequent fractions of permanent immunity with fixed values of p1 = p2 = p3 = 0.5
+    incr = 0.1
     herds = np.arange(0,1+incr,incr)
-    p1 = 1
+    p1 = 0.5
     p2 = 0.5
-    p3 = 1
+    p3 = 0.5
 
     for h in herds:
         # Run simulation
         I_mean = RunSimH(N,sweeps,p1,p2,p3,h,skip)
-
         # Appends the Average Infected Fraction data and associated permanent immunity (h) value to the data file
         f1 = open("Models/Data_Files/Herd_Immunity_Data.txt", 'a')
         f1.write("{0:4.3f}, {1}\n".format(h,abs(I_mean)))
