@@ -31,10 +31,10 @@ def ContourPlot():
     ax.set_ylabel('P(R->S)')
     ax.set_title("Fractional Average Infected Sites, <I>/N")
     ax.set_aspect('equal')
-    ax.tricontour(x,y,z)
+    #ax.tricontour(x,y,z)
 
     # Plot the heatmap
-    ht = ax.imshow(z_grid, cmap='viridis', origin='lowerleft', extent=[np.min(x), np.max(x), np.min(y), np.max(y)])
+    ht = ax.imshow(z_grid, cmap='gnuplot', origin='lower', extent=[np.min(x), np.max(x), np.min(y), np.max(y)])
     fig.colorbar(ht,ax=ax,label="Value")  # Add a colorbar
     plt.savefig('Documents/Images/ContourPlot.png')
     plt.show()

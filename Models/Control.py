@@ -19,36 +19,37 @@ from Deceased import Deceased
 #################################MODEL##################################
 ########################################################################
 
-def InitialisePop(i_0,S,I):
+# Runs the SIR model simulation
+def RunModel(i_0,iters,S,I,R,H,CC,PC,D):
+
     # Initial values normalise population to 1
     S.vals[0] = 1 - i_0
     I.vals[0] = i_0
     S.new_val[0] = S.vals[0]
     I.new_val[0] = I.vals[0]
 
-# Runs the SIR model simulation
-def RunModel(iters,S,I,R,CC):
     # Main loop to update values for each timestep
     for t in range(iters-1):
         # Calculates the newly infected and recovered proportions at time t
         I.new_val[t] = I.Update(t,S.vals)
+        H.new_val[t] = R.Update(t,I.new_val)
+        CC.new_val[t] = R.Update(t,H.new_val)
+        PC.new_val[t] = R.Update(t,CC.new_val)
+        
+        new_rs = (I.new_val[t] + H.new_val[t] + CC.new_val[t] + PC.new_val[t])
         R.new_val[t] = R.Update(t,I.new_val)
-        S.new_val[t] = S.Update(t,R.new_val)
 
-        print('Day {0:1}: dS = {1:1.3e}, dI = {2:1.3e}, dR = {3:1.3e}'.format(t, S.new_val[t]-I.new_val[t], I.new_val[t]-R.new_val[t], R.new_val[t]-S.new_val[t]))
+        S.new_val[t] = S.Update(t,R.new_val)
+        
+        new_ds = mu * (S.new_val[t] + I.new_val[t] + H.new_val[t] + CC.new_val[t] + PC.new_val[t])
+        D.new_val[t] = D.Update(t,new_ds)
+
+        #print('Day {0:1}: dS = {1:1.3e}, dI = {2:1.3e}, dR = {3:1.3e}'.format(t, S.new_val[t]-I.new_val[t], I.new_val[t]-R.new_val[t], R.new_val[t]-S.new_val[t]))
         
         # Uses the new values to update the main compartment arrays at the next timestep
         S.vals[t+1] = S.vals[t] + S.new_val[t] - I.new_val[t] 
         I.vals[t+1] = I.vals[t] + I.new_val[t] - R.new_val[t]
         R.vals[t+1] = R.vals[t] + R.new_val[t] - S.new_val[t]
-
-        # Adjusts the infection rate based on how many people are infected, this simulates lockdown measures
-        '''Once CC is implemented this should be adjusted to if CC.vals[t] >= 0.5 * CC.max_capacity'''
-        '''if I.vals[t] >= 5 * CC.max_capacity:
-            I.beta *= 0.8
-        # After measures are put in place people become complacent and stop following the rules thus infection rate will slowly increase as each day passes
-        elif I.beta <= 1:
-            I.beta *= 1.02'''
 
     return S, I, R
 
@@ -57,7 +58,7 @@ def RunModel(iters,S,I,R,CC):
 ########################################################################
 
 # Plots the Compartments values in percentage of the total population against time in days
-def plot_sir_model(compartments,iters,cc):
+def plot_sirs_model(compartments,iters,cc):
     plt.figure(figsize=(10, 6))
 
     # Plots the data curves for each compartment
@@ -94,19 +95,16 @@ if __name__ == "__main__":
     S = Susceptible('Susceptible',iters,max_prob_S)
     I = Infected('Infected',iters,beta)
     R = Resistant('Resistant',iters,max_prob_R,maxT)
-    #H = Hospitalised('Hospitalised',iters)
+    H = Hospitalised('Hospitalised',iters)
     CC = CriticalCare('Critical Care',iters,max_capacity)
-    #PC = PostCritical('Post Critical',iters)
-    #D = Deceased('Deceased',iters)
-
-    # Initialise the system such that the population is normalised with everyone in susceptible except from i_0 being infected
-    InitialisePop(i_0,S,I)
+    PC = PostCritical('Post Critical',iters)
+    D = Deceased('Deceased',iters)
 
     # Runs model and returns a list of the compartments
-    compartments = RunModel(iters,S,I,R,CC)
+    compartments = RunModel(i_0,iters,S,I,R,H,CC,PC,D)
     
     # Plot data
-    plot_sir_model(compartments,iters,CC)
+    plot_sirs_model(compartments,iters,CC)
 
 ########################################################################
 ################################NOTES###################################

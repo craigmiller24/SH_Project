@@ -72,9 +72,8 @@ def runModel(i_0,iters,max_prob_R,max_prob_S,maxT):
     newS[0] = S[0]
     newI[0] = I[0]
 
-    # Defines the infection rate and the critical care capacity which determines whether lockdown measures are required which then triggers a reduction in beta
-    beta = 1
-    crit_lim = 0.1
+    # Defines the infection rate
+    beta = 0.218
 
     # Main loop to update values for each timestep
     for t in range(iters - 1):
@@ -83,17 +82,12 @@ def runModel(i_0,iters,max_prob_R,max_prob_S,maxT):
         newR[t] = updateR(t,newI,max_prob_R,maxT)
         newS[t] = updateS(t,newR,max_prob_S)
 
-        print("Day: " + str(t + 1) + ", dS = " + str(newS[t]-newI[t]) + ", dI = " + str(newI[t]-newR[t]) + ", dR = " + str(newR[t]-newS[t]))
-        
+        print("Day: " + str(t + 1))
+
         # Uses the new values to update the main compartment arrays at the next timestep
         S[t+1] = S[t] + newS[t] - newI[t] 
         I[t+1] = I[t] + newI[t] - newR[t]
         R[t+1] = R[t] + newR[t] - newS[t]
-
-        if I[t] >= 0.5 * crit_lim:
-            beta *= 0.5
-        else:
-            beta *= 1.001
 
     return S, I, R
 
@@ -104,9 +98,9 @@ def runModel(i_0,iters,max_prob_R,max_prob_S,maxT):
 # Plots the Compartments values in percentage of the total population against time in days
 def plot_sir_model(S, I, R, iters):
     plt.figure(figsize=(10, 6))
-    plt.plot(range(iters), S, label='Susceptible')
-    plt.plot(range(iters), I, label='Infected')
-    plt.plot(range(iters), R, label='Resistant')
+    plt.plot(range(iters), 100*S, label='Susceptible')
+    plt.plot(range(iters), 100*I, label='Infected')
+    plt.plot(range(iters), 100*R, label='Resistant')
     plt.xlabel('Time (Days)')
     plt.ylabel('% of Population')
     plt.title('SIRS Model Simulation')

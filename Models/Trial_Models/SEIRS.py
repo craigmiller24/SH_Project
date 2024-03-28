@@ -13,7 +13,7 @@ def seirs_model(beta, gamma, alpha, mu, omega, sigma, days):
     I[0] = 0
     R[0] = 0
 
-    # SIIR model simulation
+    # SEIR model simulation
     for t in range(1,days):
         S[t] = max(0,S[t-1] + (mu - (beta * I[t-1] * S[t-1]) + (omega * R[t-1]) - (mu * S[t-1])))
         E[t] = max(0,E[t-1] + ((beta * I[t-1] * S[t-1]) - (sigma * E[t-1]) - (mu * E[t-1])))
@@ -27,11 +27,10 @@ def seirs_model(beta, gamma, alpha, mu, omega, sigma, days):
 
 def plot_seirs_model(susceptible, exposed, infected, recovered, days):
     plt.figure(figsize=(10, 6))
-    plt.yscale('log')
-    #plt.plot(range(days), 100*susceptible, label='Susceptible')
+    plt.plot(range(days), 100*susceptible, label='Susceptible')
     plt.plot(range(days), 100*exposed, label='Exposed')
     plt.plot(range(days), 100*infected, label='Infected')
-    #plt.plot(range(days), 100*recovered, label='Recovered')
+    plt.plot(range(days), 100*recovered, label='Recovered')
     plt.xlabel('Time (Days)')
     plt.ylabel("ln(% of Population)")
     plt.title('SEIRS Model Simulation')
