@@ -14,19 +14,19 @@ def ContourPlot():
     z = data[:, 2]
 
     # Create an array of indices to sort the data based on x and y values
-    sorted_indices = np.lexsort((x, y))
+    sorted_indices = np.lexsort((y, x))
 
     # Sort the z values based on the sorted indices
     sorted_z = z[sorted_indices]
 
 
     # Reshape the sorted z values into a grid
-    z_grid = sorted_z.reshape(21, 21)
+    z_grid = sorted_z.reshape(27,27)
 
     fig,ax = plt.subplots(figsize=(8,8))    
 
-    ax.set_xlim(0,1)
-    ax.set_ylim(0,1)
+    ax.set_xlim(0,0.26)
+    ax.set_ylim(0,0.26)
     ax.set_xlabel('P(S->I)')
     ax.set_ylabel('P(R->S)')
     ax.set_title("Fractional Average Infected Sites, <I>/N")
@@ -36,14 +36,14 @@ def ContourPlot():
     # Plot the heatmap
     ht = ax.imshow(z_grid, cmap='gnuplot', origin='lower', extent=[np.min(x), np.max(x), np.min(y), np.max(y)])
     fig.colorbar(ht,ax=ax,label="Value")  # Add a colorbar
-    plt.savefig('Documents/Images/ContourPlot.png')
+    plt.savefig('Documents/Images/ContourPlot2.png')
     plt.show()
 
     #plt.show()
 
 # Plots the Variance in the Average Infected fraction against p1
 def VariancePlot():
-    filename = 'Models/Data_Files/Variance_Data.txt'
+    filename = 'Models/Data_Files/Variance_Data_New.txt'
     f = open(filename, 'r')
     lines = f.readlines() 
     
@@ -69,7 +69,7 @@ def VariancePlot():
     ax.errorbar(p1s,Vs, Errs, fmt='kx')
     
     plt.plot(p1s,Vs, linestyle='dashed')
-    plt.savefig('Documents/Images/VariancePlot.png')
+    plt.savefig('Documents/Images/VariancePlotNew.png')
     plt.show()
 
 # Plots the fraction of permanent immunity vs average infected fraction
@@ -103,7 +103,7 @@ def HerdPlot():
     plt.show()
 
 def DataPlot():
-    filename = 'Models/Data_Files/Wave_Data.txt'
+    filename = 'Models/Data_Files/Wave_Data_2.txt'
     f = open(filename, 'r')
     lines = f.readlines() 
     
@@ -121,20 +121,15 @@ def DataPlot():
         i += 1
 
     f.close()
+    
+    plt.figure(figsize=(15, 6))
 
-    fig,ax = plt.subplots(figsize=(18,8))  
-        
-    ax.set_xlim(100,900)
-    ax.set_ylim(0,20)
-    ax.set_xlabel('Time (Days)')
-    ax.set_ylabel('Infected Percentage of Population')
-    ax.set_title("Spatial SIRS (Beta = 1, Gamma = 0.1, Alpha = 0.01)", fontweight='bold')
+    plt.xlim(100,900)
+    plt.ylim(0,25)
+    plt.xlabel('Time (Days)')
+    plt.ylabel('Infected Percentage of Population')
+    plt.title("Spatial SIRS Model")
 
-
-    plt.rcParams.update({'font.size': 24})
-    plt.rc('axes', labelsize=20) 
-    for label in (ax.get_xticklabels() + ax.get_yticklabels()): 
-        label.set_fontsize(16)
 
     #plt.plot(ts,Ss,label="Susceptible")
     plt.plot(ts,Is,label="Infected",color='#9fda9a')
@@ -142,7 +137,7 @@ def DataPlot():
 
     #plt.legend()
     plt.tight_layout()
-    plt.savefig('Documents/Images/InfectionPlot.png')
+    plt.savefig('Documents/Images/InfectionPlot2.png')
     plt.show()
 
 # Allows command line inputs to determine choice of plot

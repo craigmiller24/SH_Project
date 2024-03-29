@@ -236,16 +236,20 @@ def animate(t,generations,freq):
 def mainA():
     # Initialise system parameters
     N = 100
-    sweeps = 2_000
+    sweeps = 1_000
 
     # User inputs - outbreak fraction sets a fraction of the total nodes in the system to infected 
     p1 = float(input("p1: "))
     p2 = float(input("p2: "))
     p3 = float(input("p3: "))
 
+    #p1 = 0.8
+    #p2 = 0.1
+    #p3 = 0.01
     h = min(float(input("Permanent Immunity Fraction: ")),1)
     
     # Run simulation
+    print(p1)
     generations, I_mean, data = RunSimA(N,sweeps,p1,p2,p3,h)
 
     
@@ -256,7 +260,7 @@ def mainA():
     ani.save('Documents/Images/Wave.gif', writer = 'mencoder', fps=10)
 
     # Saves S,I,R data for each sweep to file
-    f1 = open("Models/Data_Files/Wave_Data.txt", 'a')
+    f1 = open("Models/Data_Files/Wave_Data_2.txt", 'a')
     for i in range(len(data)):
         f1.write("{0:5f}, {1:5f}, {2:5f}\n".format(data[i][0],data[i][1],data[i][2]))
     f1.close()
@@ -273,10 +277,10 @@ def mainI():
     skip = 100
     
     # Resolution determines the incremental factor between subsequent parameters, increment over p1 & p3 with p2 fixed at 0.5
-    resolution = 0.05
-    p1s = np.arange(0,1+resolution,resolution)
-    p2 = 0.5
-    p3s = np.arange(0,1+resolution,resolution)
+    resolution = 0.01
+    p1s = np.arange(0,0.25+resolution,resolution)
+    p2 = 0.1
+    p3s = np.arange(0,0.25+resolution,resolution)
 
     # Iterates over each combination of probability p1 & p2 and appends the Average infected sites fraction and associated p values to the data file
     for p1 in p1s:
@@ -294,11 +298,11 @@ def mainI():
 def mainV():
     # Initialise 50x50 system, Run the simulation for 10_000 sweeps wait 100 until equilibrium is reached then take a variance measurement at each subsequent sweep
     N = 50
-    sweeps = 10_000
+    sweeps = 5_000
     skip = 100
     
     # Resolution determines the incremental factor between subsequent parameters, increment over p1 with p2 = p3 = 0.5
-    resolution = 0.1
+    resolution = 0.05
     p1s = np.arange(0,1+resolution,resolution)
     p2 = 0.5
     p3 = 0.5
