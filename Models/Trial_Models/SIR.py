@@ -27,7 +27,7 @@ def plot_sir_model(S, I, R, iterations):
     plt.plot(range(iterations + 1), S, label='Susceptible')
     plt.plot(range(iterations + 1), I, label='Infected')
     plt.plot(range(iterations + 1), R, label='Recovered')
-    plt.xlabel('Time')
+    plt.xlabel('Time (Days)')
     plt.ylabel('Population')
     plt.title('SIR Model Simulation')
     plt.legend()

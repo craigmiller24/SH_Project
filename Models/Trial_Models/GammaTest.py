@@ -6,12 +6,13 @@ from scipy.integrate import simpson
 
 # Gamma Dist(a,x) = x**(a-1) * exp(-x)
 # a - 1 is the position of the peak of the function
-t = np.arange(0,100,1)
+t = np.arange(30,100,1)
 
 a = float(input("max: "))
 pgamma = gamma(a).pdf(t)
 pnorm = norm.pdf(t, loc= a, scale=0.15*a)
 
+print(pgamma)
 fig = plt.figure()
 
 plt.plot(t,pgamma,label="Gamma: a = " + str(a))

@@ -41,7 +41,7 @@ def plot_seir_model(susceptible, infected, recovered, days):
     plt.plot(range(days + 1), susceptible, label='Susceptible')
     plt.plot(range(days + 1), infected, label='Infected')
     plt.plot(range(days + 1), recovered, label='Recovered')
-    plt.xlabel('Days')
+    plt.xlabel('Time (Days)')
     plt.ylabel('Population')
     plt.title('SEIR Model Simulation')
     plt.legend()

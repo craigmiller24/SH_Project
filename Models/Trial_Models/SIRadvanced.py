@@ -25,7 +25,9 @@ def updateR(t,newI,max_prob_R,maxT):
             prob_R[i] = 0
         else:
             # Uses a gamma probability density function to find the percentage who were infected at searchT[i] who are now moving to recovered at time t
-            prob_R[i] = gamma(max_prob_R).pdf(searchT[i]) * newI[searchT[i]]
+            print(searchT[i])
+            print(searchT[i] - max_prob_R)
+            prob_R[i] = gamma(searchT[i] - max_prob_R).pdf(searchT)[searchT[i]] * newI[searchT[i]]
             # Removes recovered proportion from the newI array
             newI[searchT[i]] = newI[searchT[i]] - prob_R[i]
 
@@ -33,7 +35,7 @@ def updateR(t,newI,max_prob_R,maxT):
 
     # Integrate over the prob_R array to determine the total amount of the population who are recovering at time t
     new_R = simpson(prob_R)
-
+    
     return new_R 
 
 # Find the ppop that are moving from R to S at the current timestep using a gamma distribution
@@ -45,7 +47,7 @@ def updateS(t,newR,max_prob_S):
 
     for i in range(len(prob_S)):
         # Uses a Gamma probability density function to find the percentage who were resistant at searchT[i] who are now moving to susceptible at time t
-        prob_S[i] = gamma(max_prob_S).pdf(searchT[i]) * newR[searchT[i]]
+        prob_S[i] = gamma(searchT[i] - max_prob_S).pdf(searchT)[searchT[i]] * newR[searchT[i]]
         # Removes susceptible proportion from the newR array
         newR[searchT[i]] = newR[searchT[i]] - prob_S[i]
     
@@ -77,12 +79,14 @@ def runModel(i_0,iters,max_prob_R,max_prob_S,maxT):
 
     # Main loop to update values for each timestep
     for t in range(iters - 1):
+        print("Day: " + str(t + 1))
         # Calculates the newly infected and recovered proportions at time t
         newI[t] = beta * S[t] * I[t]
+        print(newI)
         newR[t] = updateR(t,newI,max_prob_R,maxT)
+        print(newR)
         newS[t] = updateS(t,newR,max_prob_S)
-
-        print("Day: " + str(t + 1))
+        print(newS)
 
         # Uses the new values to update the main compartment arrays at the next timestep
         S[t+1] = S[t] + newS[t] - newI[t] 
