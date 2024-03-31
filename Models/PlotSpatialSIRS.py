@@ -21,12 +21,12 @@ def ContourPlot():
 
 
     # Reshape the sorted z values into a grid
-    z_grid = sorted_z.reshape(27,27)
+    z_grid = sorted_z.reshape(36,36)
 
     fig,ax = plt.subplots(figsize=(8,8))    
 
-    ax.set_xlim(0,0.26)
-    ax.set_ylim(0,0.26)
+    #ax.set_xlim(0,0.35)
+    #ax.set_ylim(0,0.35)
     ax.set_xlabel('P(S->I)')
     ax.set_ylabel('P(R->S)')
     ax.set_title("Fractional Average Infected Sites, <I>/N")

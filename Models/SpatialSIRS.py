@@ -278,14 +278,14 @@ def mainI():
     
     # Resolution determines the incremental factor between subsequent parameters, increment over p1 & p3 with p2 fixed at 0.5
     resolution = 0.01
-    p1s = np.arange(0,0.25+resolution,resolution)
+    p1s = np.arange(0,0.35+resolution,resolution)
     p2 = 0.1
-    p3s = np.arange(0,0.25+resolution,resolution)
+    p3s = np.arange(0,0.35+resolution,resolution)
 
     # Iterates over each combination of probability p1 & p2 and appends the Average infected sites fraction and associated p values to the data file
     for p1 in p1s:
         for p3 in p3s:
-            # Run simulation
+            # Run simulation    
             I_mean,I_var,err_var = RunSimI(N,sweeps,skip,p1,p2,p3,'I')
 
             f1 = open("Models/Data_Files/Infected_Data.txt", 'a')
