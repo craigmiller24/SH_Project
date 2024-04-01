@@ -6,17 +6,17 @@ from scipy.integrate import simpson
 
 # Gamma Dist(a,x) = x**(a-1) * exp(-x)
 # a - 1 is the position of the peak of the function
-t = np.arange(30,100,1)
+maxprob = 70
+currT = 365
+maxT = gamma.ppf(0.95, currT - maxprob + 1)
+print(maxT)
+searchbackT = np.arange(currT - maxT + 1,currT + 1)
 
-a = float(input("max: "))
-pgamma = gamma(a).pdf(t)
-pnorm = norm.pdf(t, loc= a, scale=0.15*a)
+pgamma = gamma(currT - maxprob + 1).pdf(searchbackT)
 
-print(pgamma)
 fig = plt.figure()
 
-plt.plot(t,pgamma,label="Gamma: a = " + str(a))
-plt.plot(t,pnorm,label="Gaussian: a = " + str(a))
+plt.plot(searchbackT,pgamma,label="Gamma: a = " + str(maxprob))
 plt.xlabel("Time (Days)")
 plt.ylabel("Probability of Transition, P(t)")
 plt.title("Probability Distributions")

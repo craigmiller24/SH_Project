@@ -14,7 +14,7 @@ def ContourPlot():
     z = data[:, 2]
 
     # Create an array of indices to sort the data based on x and y values
-    sorted_indices = np.lexsort((y, x))
+    sorted_indices = np.lexsort((x, y))
 
     # Sort the z values based on the sorted indices
     sorted_z = z[sorted_indices]
@@ -43,7 +43,7 @@ def ContourPlot():
 
 # Plots the Variance in the Average Infected fraction against p1
 def VariancePlot():
-    filename = 'Models/Data_Files/Variance_Data_New.txt'
+    filename = 'Models/Data_Files/Variance_Data_updated.txt'
     f = open(filename, 'r')
     lines = f.readlines() 
     

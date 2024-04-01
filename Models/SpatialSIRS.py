@@ -297,22 +297,22 @@ def mainI():
 # Runs the simulation for different values of p1 to find the variance in infection
 def mainV():
     # Initialise 50x50 system, Run the simulation for 10_000 sweeps wait 100 until equilibrium is reached then take a variance measurement at each subsequent sweep
-    N = 50
+    N = 100
     sweeps = 5_000
     skip = 100
     
     # Resolution determines the incremental factor between subsequent parameters, increment over p1 with p2 = p3 = 0.5
-    resolution = 0.05
+    resolution = 0.01
     p1s = np.arange(0,1+resolution,resolution)
-    p2 = 0.5
-    p3 = 0.5
+    p2 = 0.1
+    p3 = 0.02
 
     # Iterates over each value of probability p1 and appends the infection variance to the data file
     for p1 in p1s:
         # Run simulation
         I_mean,I_var,err_var = RunSimI(N,sweeps,skip,p1,p2,p3,'V')
 
-        f1 = open("Models/Data_Files/Variance_Data.txt", 'a')
+        f1 = open("Models/Data_Files/Variance_Data_updated.txt", 'a')
         f1.write("{0:4.3f}, {1}, {2}\n".format(p1,I_var,err_var))
         f1.close()
 

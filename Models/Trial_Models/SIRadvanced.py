@@ -5,59 +5,86 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import gamma
-from scipy.integrate import simpson
 
 ########################################################################
 #################################MODEL##################################
 ########################################################################
 
 # Find the ppop that are moving from I to R at the current timestep using a gamma distribution
-def updateR(t,newI,max_prob_R,maxT):
-    # There is a maximum time a person can be infected for thus we must only search values as far back as t - maxT
-    # t - maxT + 1 at t = 0 effectively runs searchT from -maxT -> 0
-    searchT = np.arange(t - maxT + 1,t+1)
+def updateR(currT,newI,max_prob_R):
+
+    # Only need to consider 95% of the gamma distributions
+    maxT_Infected = int(round(gamma.ppf(0.95, max_prob_R)))
+
+    # There is a maximum time a person can be infected for, thus we must only search values as far back as 95% confidence
+    searchbackT = np.arange(currT - maxT_Infected + 1,currT + 1)
 
     # Creates an array to store the percentage of people that were infected on each day that are now recovered
-    prob_R = np.zeros(len(searchT))
-    i = 0
-    while i < len(prob_R):
-        if searchT[i] < 0:
-            prob_R[i] = 0
+    prob_R = np.zeros(maxT_Infected)
+    day = 0
+
+    while day < maxT_Infected:
+        if currT < maxT_Infected:
+            prob_R[day] = 0
         else:
             # Uses a gamma probability density function to find the percentage who were infected at searchT[i] who are now moving to recovered at time t
-            print(searchT[i])
-            print(searchT[i] - max_prob_R)
-            prob_R[i] = gamma(searchT[i] - max_prob_R).pdf(searchT)[searchT[i]] * newI[searchT[i]]
+            prob_R[day] = gamma(currT - max_prob_R).pdf(searchbackT)[day] * newI[day]
+            
             # Removes recovered proportion from the newI array
-            newI[searchT[i]] = newI[searchT[i]] - prob_R[i]
+            newI[day] = newI[day] - prob_R[day]
 
-        i += 1
+            # On last day of search all individuals still infected must be moved to recovered to conserve population
+            if day == maxT_Infected - 1:
+                newI[day] -= newI[currT-maxT_Infected]
+                newI[day] = min(1,max(newI[day],0))
+                newI[currT-maxT_Infected] = 0
+                prob_R[day] += newI[day]
+
+        day += 1
 
     # Integrate over the prob_R array to determine the total amount of the population who are recovering at time t
-    new_R = simpson(prob_R)
-    
-    return new_R 
+    recovered = np.sum(prob_R)
+
+    return recovered 
 
 # Find the ppop that are moving from R to S at the current timestep using a gamma distribution
-def updateS(t,newR,max_prob_S):
-    searchT = np.arange(0,t+1)
+def updateS(currT,newR,max_prob_S):
+    # Only need to consider 95% of the gamma distributions
+    maxT_Immunity = int(round(gamma.ppf(0.95, max_prob_S)))
+
+    # There is a maximum time a person can be immune for, thus we must only search values as far back as 95% confidence
+    searchbackT = np.arange(currT - maxT_Immunity + 1,currT + 1)
 
     # Creates an array to store the percentage of people that were resistant on each day that are now susceptible again
-    prob_S = np.zeros(len(searchT))
+    prob_S = np.zeros(maxT_Immunity)
+    day = 0
 
-    for i in range(len(prob_S)):
-        # Uses a Gamma probability density function to find the percentage who were resistant at searchT[i] who are now moving to susceptible at time t
-        prob_S[i] = gamma(searchT[i] - max_prob_S).pdf(searchT)[searchT[i]] * newR[searchT[i]]
-        # Removes susceptible proportion from the newR array
-        newR[searchT[i]] = newR[searchT[i]] - prob_S[i]
+    while day < maxT_Immunity:
+        if currT < maxT_Immunity:
+            prob_S[day] = 0
+        else:
+            # Uses a Gamma probability density function to find the percentage who were resistant at searchT[i] who are now moving to susceptible at time t
+            prob_S[day] = gamma(currT - max_prob_S).pdf(searchbackT)[day] * newR[day]
+
+            # Removes newly susceptible proportion from the newR array
+            newR[day] = newR[day] - prob_S[day]
+            
+            # On last day of search all individuals still with immunity must be moved to susceptible to conserve population
+            if day == maxT_Immunity - 1:
+                newR[day] -= newR[currT-maxT_Immunity]
+                newR[day] = min(1,max(newR[day],0))
+                newR[currT-maxT_Immunity] = 0
+                prob_S[day] += newR[day]
+
+        day += 1
     
     # Integrate over the prob_S array to determine the total amount of the population who are losing immunity at time t
-    new_S = simpson(prob_S)
+    susceptible = np.sum(prob_S)
 
-    return new_S 
+    return susceptible 
 
 # Runs the SIR model simulation
-def runModel(i_0,iters,max_prob_R,max_prob_S,maxT):
+def runModel(i_0,iters,max_prob_R,max_prob_S,R0):
     # Initialise arrays to store the total population percentage present in that compartment at each timestep
     S = np.zeros(iters)
     I = np.zeros(iters)
@@ -75,23 +102,27 @@ def runModel(i_0,iters,max_prob_R,max_prob_S,maxT):
     newI[0] = I[0]
 
     # Defines the infection rate
-    beta = 0.218
+    beta = R0 / max_prob_R
 
     # Main loop to update values for each timestep
     for t in range(iters - 1):
-        print("Day: " + str(t + 1))
         # Calculates the newly infected and recovered proportions at time t
         newI[t] = beta * S[t] * I[t]
-        print(newI)
-        newR[t] = updateR(t,newI,max_prob_R,maxT)
-        print(newR)
+        newR[t] = updateR(t,newI,max_prob_R)
         newS[t] = updateS(t,newR,max_prob_S)
-        print(newS)
 
         # Uses the new values to update the main compartment arrays at the next timestep
-        S[t+1] = S[t] + newS[t] - newI[t] 
-        I[t+1] = I[t] + newI[t] - newR[t]
-        R[t+1] = R[t] + newR[t] - newS[t]
+        ds = newS[t] - newI[t]
+        di = newI[t] - newR[t]
+        dr = newR[t] - newS[t]
+
+        #print(ds)
+        #print(di)
+        #print(dr)
+
+        S[t+1] = S[t] + ds
+        I[t+1] = I[t] + di
+        R[t+1] = R[t] + dr
 
     return S, I, R
 
@@ -101,7 +132,7 @@ def runModel(i_0,iters,max_prob_R,max_prob_S,maxT):
 
 # Plots the Compartments values in percentage of the total population against time in days
 def plot_sir_model(S, I, R, iters):
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(12, 6))
     plt.plot(range(iters), 100*S, label='Susceptible')
     plt.plot(range(iters), 100*I, label='Infected')
     plt.plot(range(iters), 100*R, label='Resistant')
@@ -120,12 +151,12 @@ if __name__ == "__main__":
     # Input initialisation parameters: i_0 - initial % of population infected
     i_0 = float(input("Initial Percentage of population infected [0,100]: ")) / 100
     iters = int(input("Number of Timesteps: ")) + 1
+    R0 = float(input("Basic Reproduction Number, R_0: "))
     max_prob_R = int(input("How many days after initial infection do most people recover? ")) + 1
-    maxT = int(input("Maximum time someone can be infected for? "))
     max_prob_S = int(input("How many days after recovery do most people lose their immunity? ")) + 1
-
+    
     # Run SIR model
-    S, I, R = runModel(i_0,iters,max_prob_R,max_prob_S,maxT)
+    S, I, R = runModel(i_0,iters,max_prob_R,max_prob_S,R0)
 
     # Check population is conserved to an acceptible tolerance
     if (S[-1]+I[-1]+R[-1]).round(6) == 1:
