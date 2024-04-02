@@ -29,7 +29,8 @@ def updateR(currT,newI,max_prob_R):
         else:
             # Uses a gamma probability density function to find the percentage who were infected at searchT[i] who are now moving to recovered at time t
             prob_R[day] = gamma(currT - max_prob_R).pdf(searchbackT)[day] * newI[day]
-            
+            print(gamma(currT - max_prob_R).pdf(searchbackT)[day]*newI[day])
+            print(prob_R)
             # Removes recovered proportion from the newI array
             newI[day] = newI[day] - prob_R[day]
 

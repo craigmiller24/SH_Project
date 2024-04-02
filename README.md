@@ -17,7 +17,7 @@ This repository contains the documents and files submitted in accompaniment with
 │   ├── Images
 │   │   ├── CombinedPlot.png
 │   │   ├── ContourPlot.png
-│   │   ├── ContourPlotNew.png
+│   │   ├── ContourPlot2.png
 │   │   ├── Expanded SIR Model.png
 │   │   ├── GammaPDF.png
 │   │   ├── InfectionPlot.png
@@ -27,7 +27,11 @@ This repository contains the documents and files submitted in accompaniment with
 │   │   ├── Reduced_CombinedPlot.png
 │   │   ├── SEIRSoscils.png
 │   │   ├── SEIRSoscilsfull.png
+│   │   ├── SEIR_218_091_182.png
+│   │   ├── SIRS_218_071_01.png
+│   │   ├── SIR_218_071.png
 │   │   ├── SpatialOscils.png
+│   │   ├── VariancePlotNew.png
 │   │   ├── WHO_Focused_Oscils.png
 │   │   ├── WHO_Very_Focused_Oscils.png
 │   │   ├── Wave.gif
@@ -35,22 +39,18 @@ This repository contains the documents and files submitted in accompaniment with
 │   │   └── WaveCycleExtended.png
 │   └── Poster
 │       ├── PosterText.docx
-│       ├── PosterThumbnail.pptx
-│       ├── PosterThumbnails.pdf
 │       ├── ProjectPoster1.pub
-│       ├── ProjectPoster1PDF.pdf
-│       ├── ProjectPoster2PDF.pdf
-│       └── ProjectPoster3PDF.pdf
+│       └── ProjectPosterDesign.pdf
 ├── Models
 │   ├── Compartment.py
 │   ├── Control.py
 │   ├── CriticalCare.py
 │   ├── Data_Files
-│   │   ├── Herd_Immunity_Data.txt
 │   │   ├── Infected_Data.txt
 │   │   ├── Infected_Data_2.txt
 │   │   ├── Variance_Data.txt
 │   │   ├── Variance_Data_New.txt
+│   │   ├── Variance_Data_updated.txt
 │   │   ├── Wave_Data.txt
 │   │   └── Wave_Data_2.txt
 │   ├── Deceased.py
@@ -68,7 +68,8 @@ This repository contains the documents and files submitted in accompaniment with
 │   │   ├── SEIRS.py
 │   │   ├── SIR.py
 │   │   ├── SIRS.py
-│   │   └── SIRadvanced.py
+│   │   ├── SIRadvanced.py
+│   │   └── gammaSIRS.py
 │   └── __pycache__
 │       ├── Compartment.cpython-38.pyc
 │       ├── CriticalCare.cpython-38.pyc
@@ -80,4 +81,4 @@ This repository contains the documents and files submitted in accompaniment with
 │       └── Susceptible.cpython-38.pyc
 └── README.md
 
-9 directories, 65 files
+9 directories, 66 files

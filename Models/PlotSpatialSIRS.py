@@ -65,7 +65,7 @@ def VariancePlot():
 
     ax.set_xlabel('P(S->I)')
     ax.set_ylabel('Variance')
-    ax.set_title("Scaled Variance vs P1 (P2 = P3 = 0.5)")
+    ax.set_title("Scaled Variance vs P1 (P2 = 0.1, P3 = 0.02)")
     ax.errorbar(p1s,Vs, Errs, fmt='kx')
     
     plt.plot(p1s,Vs, linestyle='dashed')
