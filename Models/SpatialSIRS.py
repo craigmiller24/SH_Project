@@ -236,16 +236,16 @@ def animate(t,generations,freq):
 def mainA():
     # Initialise system parameters
     N = 100
-    sweeps = 1_000
+    sweeps = 2_000
 
     # User inputs - outbreak fraction sets a fraction of the total nodes in the system to infected 
-    p1 = float(input("p1: "))
-    p2 = float(input("p2: "))
-    p3 = float(input("p3: "))
+    #p1 = float(input("p1: "))
+    #p2 = float(input("p2: "))
+    #p3 = float(input("p3: "))
 
-    #p1 = 0.8
-    #p2 = 0.1
-    #p3 = 0.01
+    p1 = 0.24
+    p2 = 0.1
+    p3 = 0.01
     h = min(float(input("Permanent Immunity Fraction: ")),1)
     
     # Run simulation
@@ -257,10 +257,10 @@ def mainA():
     ani = FuncAnimation(fig, animate, frames=sweeps, interval=200,fargs=(generations,1))
 
     # Saves the animation as a .gif file
-    ani.save('Documents/Images/Wave.gif', writer = 'mencoder', fps=10)
+    ani.save('Documents/Images/Wave_024.gif', writer = 'mencoder', fps=15)
 
     # Saves S,I,R data for each sweep to file
-    f1 = open("Models/Data_Files/Wave_Data_2.txt", 'a')
+    f1 = open("Models/Data_Files/Wave_Data_024.txt", 'a')
     for i in range(len(data)):
         f1.write("{0:5f}, {1:5f}, {2:5f}\n".format(data[i][0],data[i][1],data[i][2]))
     f1.close()

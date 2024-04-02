@@ -103,41 +103,108 @@ def HerdPlot():
     plt.show()
 
 def DataPlot():
-    filename = 'Models/Data_Files/Wave_Data_2.txt'
+    filename = 'Models/Data_Files/Wave_Data_024.txt'
     f = open(filename, 'r')
     lines = f.readlines() 
     
-    Ss = np.zeros(len(lines))
-    Is = np.zeros(len(lines))
-    Rs = np.zeros(len(lines))
+    I24s = np.zeros(len(lines))
     ts = np.arange(0,len(lines))
 
     i = 0
     for line in lines:
         line = line.strip('\n').split(',') 
-        Ss[i] = float(line[0]) * 100
-        Is[i] = float(line[1]) * 100
-        Rs[i] = float(line[2]) * 100
+        I24s[i] = float(line[1]) * 100
+        i += 1
+
+    f.close()
+
+    filename = 'Models/Data_Files/Wave_Data_03.txt'
+    f = open(filename, 'r')
+    lines = f.readlines() 
+    
+    I3s = np.zeros(len(lines))
+
+    i = 0
+    for line in lines:
+        line = line.strip('\n').split(',') 
+        I3s[i] = float(line[1]) * 100
+        i += 1
+
+    f.close()
+
+    filename = 'Models/Data_Files/Wave_Data_04.txt'
+    f = open(filename, 'r')
+    lines = f.readlines() 
+    
+    I4s = np.zeros(len(lines))
+
+    i = 0
+    for line in lines:
+        line = line.strip('\n').split(',') 
+        I4s[i] = float(line[1]) * 100
+        i += 1
+
+    f.close()
+
+    filename = 'Models/Data_Files/Wave_Data_05.txt'
+    f = open(filename, 'r')
+    lines = f.readlines() 
+    
+    I5s = np.zeros(len(lines))
+
+    i = 0
+    for line in lines:
+        line = line.strip('\n').split(',') 
+        I5s[i] = float(line[1]) * 100
+        i += 1
+
+    f.close()
+
+    filename = 'Models/Data_Files/Wave_Data_08.txt'
+    f = open(filename, 'r')
+    lines = f.readlines() 
+    
+    I8s = np.zeros(len(lines))
+
+    i = 0
+    for line in lines:
+        line = line.strip('\n').split(',') 
+        I8s[i] = float(line[1]) * 100
         i += 1
 
     f.close()
     
-    plt.figure(figsize=(15, 6))
+    fig,axes = plt.subplots(nrows=5,ncols=1,sharex=True)
+    
+    fig.set_figwidth(15)
+    fig.set_figheight(10)
 
-    plt.xlim(100,900)
-    plt.ylim(0,25)
-    plt.xlabel('Time (Days)')
-    plt.ylabel('Infected Percentage of Population')
-    plt.title("Spatial SIRS Model")
+    axes[0].plot(ts,I24s,label="p1 = 0.24",color='black')
+    axes[1].plot(ts,I3s,label="p1 = 0.3",color='black')
+    axes[2].plot(ts,I4s,label="p1 = 0.4",color='black')
+    axes[3].plot(ts,I5s,label="p1 = 0.5",color='black')
+    axes[4].plot(ts,I8s,label="p1 = 0.8",color='black')
 
+    axes[0].set_xlim(100,2_000)
+    axes[4].set_xlabel('Time (Days)')
 
-    #plt.plot(ts,Ss,label="Susceptible")
-    plt.plot(ts,Is,label="Infected",color='#9fda9a')
-    #plt.plot(ts,Rs,label="Resistant")
+    axes[0].set_ylim(0,30)
+    axes[1].set_ylim(0,30)
+    axes[2].set_ylim(0,30)
+    axes[3].set_ylim(0,30)
+    axes[4].set_ylim(0,30)
 
-    #plt.legend()
+    axes[0].legend()
+    axes[1].legend()
+    axes[2].legend()
+    axes[3].legend()
+    axes[4].legend()
+
+    axes[2].set_ylabel('Infected Percentage of Population')
+    axes[0].set_title("Spatial SIRS Model: p2 = 0.1, p3 = 0.01")
+    
     plt.tight_layout()
-    plt.savefig('Documents/Images/InfectionPlot2.png')
+    plt.savefig('Documents/Images/All_Spatial_Infection_Plots_2000.png')
     plt.show()
 
 # Allows command line inputs to determine choice of plot
