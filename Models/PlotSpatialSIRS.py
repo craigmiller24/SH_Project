@@ -132,6 +132,15 @@ def DataPlot():
 
     f.close()
 
+    '''plt.ylim(0,15)
+    plt.ylabel("Infected % of Population")
+    plt.xlim(100,1_100)
+    plt.xlabel('Time (Days)')
+    plt.title("Spatial SIRS Model")
+    plt.plot(ts,I3s,label="Infection for R_0 = 3",color='black')
+    plt.legend()
+    plt.show()'''
+
     filename = 'Models/Data_Files/Wave_Data_04.txt'
     f = open(filename, 'r')
     lines = f.readlines() 

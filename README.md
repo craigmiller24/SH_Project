@@ -19,6 +19,7 @@ This repository contains the documents and files submitted in accompaniment with
 │   │   ├── CombinedPlot.png
 │   │   ├── Contour_Plot_01.png
 │   │   ├── Contour_Plot_05.png
+│   │   ├── Enhanced_R0_3.png
 │   │   ├── Expanded SIR Model.png
 │   │   ├── GammaPDF.png
 │   │   ├── ONS_Oscils.png
@@ -29,6 +30,7 @@ This repository contains the documents and files submitted in accompaniment with
 │   │   ├── SEIR_218_091_182.png
 │   │   ├── SIRS_218_071_01.png
 │   │   ├── SIR_218_071.png
+│   │   ├── SIR_SEIR.png
 │   │   ├── Spatial_Infection_Plot_024_2000.png
 │   │   ├── Spatial_Infection_Plot_03_2000.png
 │   │   ├── Spatial_Infection_Plot_04_2000.png
@@ -45,10 +47,10 @@ This repository contains the documents and files submitted in accompaniment with
 │   │   ├── Wave_04.gif
 │   │   ├── Wave_05.gif
 │   │   └── Wave_08.gif
-│   └── Poster
-│       ├── PosterText.docx
-│       ├── ProjectPoster1.pub
-│       └── ProjectPosterDesign.pdf
+│   ├── Poster
+│   │   └── ProjectPosterFINAL.pdf
+│   ├── SH_Project_Report_Final.pdf
+│   └── Timeline_Notes.pdf
 ├── Models
 │   ├── Data_Files
 │   │   ├── Infected_Data.txt
@@ -82,4 +84,4 @@ This repository contains the documents and files submitted in accompaniment with
 │       └── Susceptible.cpython-38.pyc
 └── README.md
 
-9 directories, 67 files
+9 directories, 69 files
